@@ -41,6 +41,7 @@ namespace Trainsport.Game
             for (int i = 0; i < this.NumCities; i++) {
                 new Connection(newWorld.Cities[i],GetClosestUnconnectedCity(newWorld, newWorld.Cities[i]));
             }
+            FixSeparations(newWorld);
 
             //Fahrzeug generieren
             newWorld.Vehicles.Add(new Vehicle() {
@@ -55,6 +56,47 @@ namespace Trainsport.Game
             var otherCities = world.Cities.Where(c => c != city && !c.Connections.Any(con => con.Cities.Contains(c) && con.Cities.Contains(city))).ToList();
             otherCities.Sort((c1, c2) => c1.Location.GetDistanceTo(city.Location).CompareTo(c2.Location.GetDistanceTo(city.Location)));
             return otherCities[0];
+        }
+
+        private void FixSeparations(World world) {
+            //We start at the first city and check which ones we can reach.
+            List<City> reachedCities = new List<City>();
+            List<Connection> checkedConnections = new List<Connection>();
+
+            Queue<City> cityQueue = new Queue<City>();
+            cityQueue.Enqueue(world.Cities[0]);
+            
+            while(cityQueue.Any()) {
+                City city = cityQueue.Dequeue();
+                foreach(Connection conn in city.Connections.Where(conn => !checkedConnections.Contains(conn))) {
+                    City connectedCity = conn.Cities.Where(c => c != city).First();
+                    if(!reachedCities.Contains(connectedCity) && !cityQueue.Contains(connectedCity)) {
+                        cityQueue.Enqueue(connectedCity);
+                    }
+                }
+                reachedCities.Add(city);
+            }
+
+            //Any city not in the reachedCities-list is disconnected from the first one
+            //Find the shortest connection and make it
+            if(reachedCities.Count != world.Cities.Count) {
+                List<City> unreachedCities = world.Cities.Where(c => !reachedCities.Contains(c)).ToList();
+                List<Tuple<City, City>> pairs = new List<Tuple<City, City>>();
+
+                reachedCities.ForEach(reached => {
+                    unreachedCities.ForEach(unreached => {
+                        pairs.Add(new Tuple<City, City>(reached, unreached));
+                    });
+                });
+                pairs.Sort((p1, p2) => {
+                    return p1.Item1.Location.GetDiff(p1.Item2.Location).GetLength().CompareTo(
+                        p2.Item1.Location.GetDiff(p2.Item2.Location).GetLength()
+                        );
+                });
+                new Connection(pairs[0].Item1, pairs[0].Item2);
+
+                FixSeparations(world);
+            }
         }
     }
 }
