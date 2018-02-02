@@ -79,7 +79,7 @@ namespace Trainsport.Game
             }
             distances.Sort((d1, d2) => d1.Item2.CompareTo(d2.Item2));
 
-            var found = distances.Where(d => d.Item2 > 3).FirstOrDefault();
+            var found = distances.Where(d => d.Item2 > 2.5 && d.Item1.Item1.Location.GetDiff(d.Item1.Item2.Location).GetLength() > 40 ).FirstOrDefault();
             if (found != null) {
                 Console.WriteLine("Adding connection " + found.Item1.Item1.Name + "<->" + found.Item1.Item2.Name + ":" + found.Item2);
                 new Connection(found.Item1.Item1, found.Item1.Item2);
