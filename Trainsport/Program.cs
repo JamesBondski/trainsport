@@ -12,11 +12,14 @@ namespace Trainsport
         {
             WorldGen gen = new WorldGen();
             World world = gen.Generate();
-            /*
+            
             Console.WriteLine("Seed: " + gen.Seed);
             foreach(City city in world.Cities) {
                 Console.WriteLine(city.Name + "(" + (int)city.Location.X + ":" + (int)city.Location.Y + ")->" + String.Join(',', city.Connections.Select(con =>con.Cities.Where(c => c != city).First().Name)));
-            }*/
+            }
+
+            Console.ReadLine();
+            Console.Clear();
 
             var printer = new MapPrinter() {
                 World = world
@@ -60,7 +63,8 @@ namespace Trainsport
             Console.WriteLine("You are currently in " + vehicle.CurrentCity.Name + ". Where do you want to go?");
             int i = 0;
             foreach (Connection road in vehicle.CurrentCity.Connections) {
-                Console.WriteLine(i++ + ". " + road.Cities.Where(c => c != vehicle.CurrentCity).First().Name);
+                City connectedCity = road.Cities.Where(c => c != vehicle.CurrentCity).First();
+                Console.WriteLine(i++ + ". " + connectedCity.Name + " (" + (int)connectedCity.Location.GetDiff(vehicle.Location).GetLength() + " km)");
             }
             command = Console.ReadLine();
             int selected = 0;

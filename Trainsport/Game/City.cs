@@ -10,5 +10,9 @@ namespace Trainsport.Game
         public string Name { get; set; }
         public IList<Connection> Connections { get; } = new List<Connection>();
         public Coordinates Location { get; set; }
+
+        public override string ToString() {
+            return this.Name;
+        }
     }
 }

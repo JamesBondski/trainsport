@@ -23,5 +23,9 @@ namespace Trainsport.Game
             city1.Connections.Add(this);
             city2.Connections.Add(this);
         }
+
+        public override string ToString() {
+            return this.Cities[0].Name + "<->" + this.Cities[1].Name;
+        }
     }
 }
