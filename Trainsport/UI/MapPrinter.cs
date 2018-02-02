@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Trainsport.Game;
+using Trainsport.Util;
 
 namespace Trainsport.UI
 {
@@ -10,11 +11,27 @@ namespace Trainsport.UI
     {
         public World World { get; set; }
 
+        private double scale = 4.5;
+        public double Scale {
+            get {
+                return this.scale;
+            }
+            set {
+                this.scale = value;
+            }
+        }
+
+        public Coordinates Size {
+            get {
+                return new Coordinates(this.World.MapSize.X / scale, this.World.MapSize.Y / scale);
+            }
+        }
+
         public void Print() {
-            for (int y = 5; y < 100; y += 10) {
-                for (int x = 5; x < 100; x += 10) {
-                    var cities = World.Cities.Where(c => Math.Abs(c.Location.X - x) <= 5 && Math.Abs(c.Location.Y - y) <= 5);
-                    var vehicles = World.Vehicles.Where(c => Math.Abs(c.Location.X - x) <= 5 && Math.Abs(c.Location.Y - y) <= 5);
+            for (double y = Scale / 2; y < World.MapSize.Y; y += Scale) {
+                for (double x = Scale / 2; x < World.MapSize.X; x += Scale) {
+                    var cities = World.Cities.Where(c => Math.Abs(c.Location.X - x) <= Scale / 2 && Math.Abs(c.Location.Y - y) <= Scale / 2);
+                    var vehicles = World.Vehicles.Where(c => Math.Abs(c.Location.X - x) <= Scale / 2 && Math.Abs(c.Location.Y - y) <= Scale / 2);
 
                     if(vehicles.Any()) {
                         Console.ForegroundColor = ConsoleColor.Red;

@@ -27,6 +27,7 @@ namespace Trainsport.Game
 
         public World Generate() {
             World newWorld = new World();
+            newWorld.MapSize = this.Size;
             newWorld.Rnd = new Random(this.Seed);
 
             //Städte generieren

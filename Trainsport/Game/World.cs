@@ -2,12 +2,17 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
+using Trainsport.Util;
 
 namespace Trainsport.Game
 {
     public class World
     {
         public Random Rnd {
+            get; set;
+        }
+
+        public Coordinates MapSize {
             get; set;
         }
 

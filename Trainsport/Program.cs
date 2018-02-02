@@ -28,7 +28,7 @@ namespace Trainsport
             Vehicle vehicle = world.Vehicles[0];
             string command = "";
             do {
-                Clear();
+                Clear((int)Math.Ceiling(printer.Size.Y));
                 printer.Print();
                 if (vehicle.CurrentCity != null) {
                     Console.WriteLine("You have reached your destination.");
@@ -50,8 +50,8 @@ namespace Trainsport
             } while (command != "qu");
         }
 
-        private static void Clear() {
-            Console.SetCursorPosition(0, 11);
+        private static void Clear(int startLine) {
+            Console.SetCursorPosition(0, startLine);
             for (int i = 0; i < 6; i++) {
                 Console.WriteLine("                                                                          ");
             }
